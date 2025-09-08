@@ -13,7 +13,7 @@ class CourierAPIClientTestCase(TestCase):
     """Test cases for CourierAPIClient."""
     
     def setUp(self):
-        from backend.courier_client import CourierAPIClient
+        from config.courier_client import CourierAPIClient
         self.client = CourierAPIClient()
     
     @patch('requests.put')

@@ -211,7 +211,7 @@ class JWTGenerationTestCase(TestCase):
     
     def test_inbox_jwt_generation(self):
         """Test JWT generation for inbox access."""
-        from backend.jwt_utils import generate_inbox_jwt
+        from config.jwt_utils import generate_inbox_jwt
         
         jwt_token = generate_inbox_jwt(self.user.courier_user_id)
         
@@ -220,7 +220,7 @@ class JWTGenerationTestCase(TestCase):
     
     def test_create_jwt_generation(self):
         """Test JWT generation for create access."""
-        from backend.jwt_utils import generate_create_jwt
+        from config.jwt_utils import generate_create_jwt
         
         jwt_token = generate_create_jwt(self.user.courier_user_id)
         
@@ -229,7 +229,7 @@ class JWTGenerationTestCase(TestCase):
     
     def test_jwt_verification(self):
         """Test JWT token verification."""
-        from backend.jwt_utils import generate_courier_jwt, verify_courier_jwt
+        from config.jwt_utils import generate_courier_jwt, verify_courier_jwt
         
         jwt_token = generate_courier_jwt(self.user.courier_user_id)
         payload = verify_courier_jwt(jwt_token)

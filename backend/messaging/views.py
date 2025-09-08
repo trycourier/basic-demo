@@ -1,7 +1,7 @@
 from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from backend.courier_client import CourierAPIClient
+from config.courier_client import CourierAPIClient
 from users.models import DemoUser
 
 

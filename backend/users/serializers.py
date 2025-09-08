@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from .models import DemoUser
-from backend.courier_client import CourierAPIClient
-from backend.jwt_utils import generate_inbox_jwt, generate_create_jwt
+from config.courier_client import CourierAPIClient
+from config.jwt_utils import generate_inbox_jwt, generate_create_jwt
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):

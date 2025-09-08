@@ -98,7 +98,7 @@ def user_inbox_jwt(request):
     """
     Get JWT token for Courier Inbox access.
     """
-    from backend.jwt_utils import generate_inbox_jwt
+    from config.jwt_utils import generate_inbox_jwt
     
     user = request.user
     jwt_token = generate_inbox_jwt(user.courier_user_id)
@@ -115,7 +115,7 @@ def user_create_jwt(request):
     """
     Get JWT token for Courier Create access.
     """
-    from backend.jwt_utils import generate_create_jwt
+    from config.jwt_utils import generate_create_jwt
     
     user = request.user
     jwt_token = generate_create_jwt(user.courier_user_id)
