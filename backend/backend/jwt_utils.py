@@ -23,7 +23,7 @@ def generate_courier_jwt(user_id, scopes=None):
     # Create payload
     payload = {
         'sub': user_id,
-        'iss': 'courier-demo-backend',
+        'iss': 'basic-demo-backend',
         'aud': 'courier',
         'exp': exp_time,
         'iat': datetime.utcnow(),
