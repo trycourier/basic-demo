@@ -60,7 +60,7 @@ class UserRegistrationTestCase(APITestCase):
             'preferred_language': 'en'
         }
     
-    @patch('backend.courier_client.CourierAPIClient.create_user')
+    @patch('config.courier_client.CourierAPIClient.create_user')
     def test_successful_registration(self, mock_create_user):
         """Test successful user registration."""
         mock_create_user.return_value = {'id': 'demo_user_newuser'}
@@ -93,7 +93,7 @@ class UserRegistrationTestCase(APITestCase):
         
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
     
-    @patch('backend.courier_client.CourierAPIClient.create_user')
+    @patch('config.courier_client.CourierAPIClient.create_user')
     def test_registration_courier_failure(self, mock_create_user):
         """Test registration when Courier user creation fails."""
         mock_create_user.side_effect = Exception('Courier API Error')
@@ -174,7 +174,7 @@ class UserProfileTestCase(APITestCase):
         self.assertIn('inbox_jwt', response.data)
         self.assertIn('create_jwt', response.data)
     
-    @patch('backend.courier_client.CourierAPIClient.update_user_profile')
+    @patch('config.courier_client.CourierAPIClient.update_user_profile')
     def test_update_profile(self, mock_update_profile):
         """Test updating user profile."""
         mock_update_profile.return_value = {'id': 'demo_user_testuser'}
@@ -241,7 +241,7 @@ class JWTGenerationTestCase(TestCase):
 class UserViewsIntegrationTestCase(APITestCase):
     """Integration tests for user views."""
     
-    @patch('backend.courier_client.CourierAPIClient.create_user')
+    @patch('config.courier_client.CourierAPIClient.create_user')
     def test_full_user_lifecycle(self, mock_create_user):
         """Test complete user lifecycle: register -> login -> profile -> logout."""
         mock_create_user.return_value = {'id': 'demo_user_lifecycle'}
