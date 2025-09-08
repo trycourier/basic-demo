@@ -53,11 +53,14 @@ This demo showcases all three core Courier products:
 ```
 basic-demo/
 ├── backend/                       # Django API
-│   ├── backend/                   # Django settings
+│   ├── venv/                     # Python virtual environment
+│   ├── config/                    # Django project configuration
 │   │   ├── settings.py           # Main configuration
 │   │   ├── courier_client.py     # Courier API client
 │   │   ├── jwt_utils.py          # JWT token generation
-│   │   └── urls.py               # Main URL routing
+│   │   ├── urls.py               # Main URL routing
+│   │   ├── wsgi.py               # WSGI configuration
+│   │   └── asgi.py               # ASGI configuration
 │   ├── users/                     # User management
 │   │   ├── models.py             # User model
 │   │   ├── views.py              # API views
@@ -70,7 +73,8 @@ basic-demo/
 │   │   ├── views.py              # Messaging API views
 │   │   └── tests.py              # Messaging tests
 │   ├── requirements.txt           # Python dependencies
-│   └── manage.py                 # Django management
+│   ├── manage.py                 # Django management
+│   └── Dockerfile                # Backend container
 ├── frontend/                      # React app
 │   ├── src/
 │   │   ├── components/           # Reusable components

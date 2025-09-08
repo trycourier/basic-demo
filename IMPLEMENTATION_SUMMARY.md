@@ -69,7 +69,8 @@ We have successfully built a comprehensive Courier demo platform that showcases 
 ```
 basic-demo/
 ├── backend/                       # Django API
-│   ├── backend/                   # Django settings & config
+│   ├── venv/                     # Python virtual environment
+│   ├── config/                    # Django project configuration
 │   ├── users/                     # User management & auth
 │   ├── templates/                 # Template management
 │   ├── messaging/                 # Message sending
