@@ -51,7 +51,7 @@ This demo showcases all three core Courier products:
 ## 📁 Project Structure
 
 ```
-bayer-demo/
+basic-demo/
 ├── backend/                       # Django API
 │   ├── backend/                   # Django settings
 │   │   ├── settings.py           # Main configuration
@@ -107,7 +107,7 @@ bayer-demo/
 1. **Clone the repository:**
    ```bash
    git clone <repository-url>
-   cd bayer-demo
+   cd basic-demo
    ```
 
 2. **Set up environment variables:**

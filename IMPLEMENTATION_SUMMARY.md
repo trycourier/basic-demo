@@ -67,7 +67,7 @@ We have successfully built a comprehensive Courier demo platform that showcases 
 ## 📁 Project Structure
 
 ```
-bayer-demo/
+basic-demo/
 ├── backend/                       # Django API
 │   ├── backend/                   # Django settings & config
 │   ├── users/                     # User management & auth
