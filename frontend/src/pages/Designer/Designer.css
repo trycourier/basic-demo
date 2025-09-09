@@ -1,0 +1,53 @@
+/* Designer page specific styles */
+.designer-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.designer-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  min-height: 0; /* Important for flexbox */
+}
+
+/* Reset any conflicting styles for Courier Create */
+.designer-content * {
+  box-sizing: border-box;
+}
+
+/* Ensure Courier Create components have proper dimensions */
+.designer-content .courier-editor {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+/* Fix any z-index issues */
+.designer-content .courier-editor .courier-modal {
+  z-index: 9999 !important;
+}
+
+/* Ensure proper scrolling within the editor */
+.designer-content .courier-editor .courier-scrollable {
+  overflow: auto !important;
+}
+
+/* Fix any Material UI conflicts */
+.designer-container .MuiBox-root {
+  box-sizing: border-box;
+}
+
+/* Ensure the editor takes full space */
+.designer-content > div {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+/* Fix any iframe or embedded content issues */
+.designer-content iframe {
+  border: none !important;
+  width: 100% !important;
+  height: 100% !important;
+}

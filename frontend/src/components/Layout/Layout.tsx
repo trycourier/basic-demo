@@ -164,8 +164,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
+          p: location.pathname === '/designer' ? 0 : 3, // No padding for designer
           width: { md: `calc(100% - ${drawerWidth}px)` },
+          height: location.pathname === '/designer' ? '100vh' : 'auto', // Full height for designer
+          overflow: location.pathname === '/designer' ? 'hidden' : 'auto', // Prevent scrolling for designer
         }}
       >
         <Toolbar />

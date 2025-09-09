@@ -9,12 +9,23 @@ class CourierAPIClient:
     """
     
     def __init__(self):
-        self.api_key = settings.COURIER_API_KEY
+        self.api_key = getattr(settings, 'COURIER_API_KEY', None)
         self.base_url = "https://api.courier.com"
         self.headers = {
             'Authorization': f'Bearer {self.api_key}',
             'Content-Type': 'application/json'
         }
+        
+        # Check if we have valid credentials
+        if not self.api_key or self.api_key == 'your_courier_api_key_here':
+            self.api_key = None
+            print("Warning: Courier API key not configured. Courier features will be disabled.")
+        else:
+            print("✅ Courier API key configured. Courier features enabled.")
+    
+    def is_available(self) -> bool:
+        """Check if Courier API is available (has valid credentials)."""
+        return self.api_key is not None
     
     def create_user(self, user_id: str, profile: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -34,6 +45,11 @@ class CourierAPIClient:
         
         response = requests.put(url, json=data, headers=self.headers)
         response.raise_for_status()
+        
+        # Handle 204 No Content responses
+        if response.status_code == 204:
+            return {'user_id': user_id, 'status': 'created'}
+        
         return response.json()
     
     def send_message(self, message: Dict[str, Any]) -> Dict[str, Any]:
@@ -86,6 +102,11 @@ class CourierAPIClient:
         
         response = requests.patch(url, json=data, headers=self.headers)
         response.raise_for_status()
+        
+        # Handle 204 No Content responses
+        if response.status_code == 204:
+            return {'user_id': user_id, 'status': 'updated'}
+        
         return response.json()
     
     def get_templates(self) -> Dict[str, Any]:

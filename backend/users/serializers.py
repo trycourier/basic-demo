@@ -51,9 +51,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         try:
             courier_client.create_user(courier_user_id, courier_profile)
         except Exception as e:
-            # If Courier creation fails, delete local user
-            user.delete()
-            raise serializers.ValidationError(f"Failed to create Courier user: {str(e)}")
+            # If Courier creation fails, check if we're in development mode
+            from django.conf import settings
+            if not courier_client.is_available():
+                # Courier not available, just log the warning
+                print(f"Warning: Courier integration disabled - no API credentials configured")
+            else:
+                # If Courier creation fails in production, delete local user
+                user.delete()
+                raise serializers.ValidationError(f"Failed to create Courier user: {str(e)}")
         
         return user
 
