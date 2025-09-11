@@ -1,250 +1,304 @@
+"""
+Courier API client using the official trycourier SDK.
+"""
+import logging
 import requests
-from django.conf import settings
 from typing import Dict, Any, Optional
+from django.conf import settings
+from decouple import config
+import courier
+from courier.client import Courier
+
+logger = logging.getLogger(__name__)
 
 
 class CourierAPIClient:
     """
-    Client for interacting with Courier's API.
+    Courier API client using the official trycourier SDK.
     """
     
     def __init__(self):
-        self.api_key = getattr(settings, 'COURIER_API_KEY', None)
-        self.base_url = "https://api.courier.com"
-        self.headers = {
-            'Authorization': f'Bearer {self.api_key}',
-            'Content-Type': 'application/json'
-        }
+        """Initialize the Courier client with API key from settings."""
+        self.api_key = config('COURIER_API_KEY', default='')
         
-        # Check if we have valid credentials
-        if not self.api_key or self.api_key == 'your_courier_api_key_here':
-            self.api_key = None
-            print("Warning: Courier API key not configured. Courier features will be disabled.")
-        else:
-            print("✅ Courier API key configured. Courier features enabled.")
+        if not self.api_key:
+            logger.warning("Courier API key not configured. Courier features will be disabled.")
+            self.client = None
+            return
+            
+        try:
+            self.client = Courier(authorization_token=self.api_key)
+            logger.info("✅ Courier API key configured. Courier features enabled.")
+        except Exception as e:
+            logger.error(f"Failed to initialize Courier client: {e}")
+            self.client = None
     
     def is_available(self) -> bool:
-        """Check if Courier API is available (has valid credentials)."""
-        return self.api_key is not None
+        """Check if Courier client is available and configured."""
+        return self.client is not None
     
-    def create_user(self, user_id: str, profile: Dict[str, Any]) -> Dict[str, Any]:
+    def create_user(self, user_id: str, email: str, name: str = None) -> Dict[str, Any]:
         """
-        Create or update a user in Courier.
+        Create a user in Courier.
         
         Args:
-            user_id (str): Unique identifier for the user
-            profile (dict): User profile data
+            user_id (str): Unique user identifier
+            email (str): User's email address
+            name (str, optional): User's display name
         
         Returns:
-            dict: API response
+            dict: User creation response
         """
-        url = f"{self.base_url}/users/{user_id}"
-        data = {
-            'profile': profile
-        }
+        if not self.client:
+            raise ValueError("Courier client not available")
         
-        response = requests.put(url, json=data, headers=self.headers)
-        response.raise_for_status()
-        
-        # Handle 204 No Content responses
-        if response.status_code == 204:
-            return {'user_id': user_id, 'status': 'created'}
-        
-        return response.json()
+        try:
+            # Create user profile
+            profile_data = {
+                "email": email,
+                "name": name or email.split('@')[0]
+            }
+            
+            response = self.client.profiles.replace(
+                user_id=user_id,
+                profile=profile_data
+            )
+            
+            logger.info(f"Created Courier user: {user_id}")
+            return {"success": True, "user_id": user_id}
+            
+        except Exception as e:
+            logger.error(f"Failed to create Courier user {user_id}: {e}")
+            raise
     
-    def send_message(self, message: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Send a message through Courier.
-        
-        Args:
-            message (dict): Message data including recipient, template, and data
-        
-        Returns:
-            dict: API response with message ID
-        """
-        url = f"{self.base_url}/send"
-        
-        response = requests.post(url, json=message, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
-    
-    def get_user_profile(self, user_id: str) -> Dict[str, Any]:
-        """
-        Get user profile from Courier.
-        
-        Args:
-            user_id (str): User identifier
-        
-        Returns:
-            dict: User profile data
-        """
-        url = f"{self.base_url}/users/{user_id}"
-        
-        response = requests.get(url, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
-    
-    def update_user_profile(self, user_id: str, profile: Dict[str, Any]) -> Dict[str, Any]:
+    def update_user_profile(self, user_id: str, profile_data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Update user profile in Courier.
         
         Args:
             user_id (str): User identifier
-            profile (dict): Updated profile data
+            profile_data (dict): Profile data to update
         
         Returns:
-            dict: API response
+            dict: Update response
         """
-        url = f"{self.base_url}/users/{user_id}"
-        data = {
-            'profile': profile
-        }
+        if not self.client:
+            raise ValueError("Courier client not available")
         
-        response = requests.patch(url, json=data, headers=self.headers)
-        response.raise_for_status()
+        try:
+            response = self.client.profiles.replace(
+                user_id=user_id,
+                profile=profile_data
+            )
+            
+            logger.info(f"Updated Courier user profile: {user_id}")
+            return {"success": True, "user_id": user_id}
+            
+        except Exception as e:
+            logger.error(f"Failed to update Courier user profile {user_id}: {e}")
+            raise
+    
+    def send_notification(self, user_id: str, template_id: str, data: Dict[str, Any] = None) -> Dict[str, Any]:
+        """
+        Send a notification using Courier.
         
-        # Handle 204 No Content responses
-        if response.status_code == 204:
-            return {'user_id': user_id, 'status': 'updated'}
+        Args:
+            user_id (str): Recipient user ID
+            template_id (str): Template ID to use
+            data (dict, optional): Template data
         
-        return response.json()
+        Returns:
+            dict: Send response
+        """
+        if not self.client:
+            raise ValueError("Courier client not available")
+        
+        try:
+            response = self.client.send(
+                message=courier.ContentMessage(
+                    to=courier.UserRecipient(user_id=user_id),
+                    template=courier.TemplateMessage(template_id=template_id),
+                    data=data or {},
+                    routing=courier.Routing(method="all", channels=["inbox", "email"])
+                )
+            )
+            
+            logger.info(f"Sent notification to {user_id} using template {template_id}")
+            return response
+            
+        except Exception as e:
+            logger.error(f"Failed to send notification to {user_id}: {e}")
+            raise
+    
+    def send_direct_message(self, user_id: str, title: str, body: str, data: Dict[str, Any] = None) -> Dict[str, Any]:
+        """
+        Send a direct message without a template.
+        
+        Args:
+            user_id (str): Recipient user ID
+            title (str): Message title
+            body (str): Message body
+            data (dict, optional): Additional data
+        
+        Returns:
+            dict: Send response
+        """
+        if not self.client:
+            raise ValueError("Courier client not available")
+        
+        try:
+            response = self.client.send(
+                message=courier.ContentMessage(
+                    to=courier.UserRecipient(user_id=user_id),
+                    content=courier.ElementalContentSugar(
+                        title=title,
+                        body=body
+                    ),
+                    data=data or {},
+                    routing=courier.Routing(method="all", channels=["inbox", "email"])
+                )
+            )
+            
+            logger.info(f"Sent direct message to {user_id}: {title}")
+            return response
+            
+        except Exception as e:
+            logger.error(f"Failed to send direct message to {user_id}: {e}")
+            raise
     
     def get_templates(self) -> Dict[str, Any]:
         """
-        Get all templates from Courier.
+        Get all templates for the tenant using tenant-specific endpoint.
         
         Returns:
-            dict: Templates data
+            dict: Templates response
         """
-        url = f"{self.base_url}/templates"
+        if not self.api_key:
+            raise ValueError("Courier API key not available")
         
-        response = requests.get(url, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
+        tenant_id = getattr(settings, 'COURIER_TENANT_ID', None)
+        if not tenant_id:
+            raise ValueError("COURIER_TENANT_ID not configured")
+        
+        try:
+            # Use tenant-specific templates endpoint
+            url = f"https://api.courier.com/tenants/{tenant_id}/templates"
+            headers = {
+                "Authorization": f"Bearer {self.api_key}"
+            }
+            
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+            result = response.json()
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Failed to get templates: {e}")
+            # Return empty results instead of failing
+            return {'results': [], 'count': 0}
     
     def get_template(self, template_id: str) -> Dict[str, Any]:
         """
-        Get a specific template from Courier.
+        Get a specific template using tenant-specific endpoint.
         
         Args:
-            template_id (str): Template identifier
+            template_id (str): Template ID
         
         Returns:
             dict: Template data
         """
-        url = f"{self.base_url}/templates/{template_id}"
+        if not self.api_key:
+            raise ValueError("Courier API key not available")
         
-        response = requests.get(url, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
+        tenant_id = getattr(settings, 'COURIER_TENANT_ID', None)
+        if not tenant_id:
+            raise ValueError("COURIER_TENANT_ID not configured")
+        
+        try:
+            url = f"https://api.courier.com/tenants/{tenant_id}/templates/{template_id}"
+            headers = {
+                "Authorization": f"Bearer {self.api_key}"
+            }
+            
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+            result = response.json()
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Failed to get template {template_id}: {e}")
+            raise
     
     def create_template(self, template_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Create a new template in Courier.
+        Create a new template using tenant-specific endpoint.
         
         Args:
             template_data (dict): Template data
         
         Returns:
-            dict: API response with template ID
+            dict: Created template response
         """
-        url = f"{self.base_url}/templates"
+        if not self.api_key:
+            raise ValueError("Courier API key not available")
         
-        response = requests.post(url, json=template_data, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
+        tenant_id = getattr(settings, 'COURIER_TENANT_ID', None)
+        if not tenant_id:
+            raise ValueError("COURIER_TENANT_ID not configured")
+        
+        try:
+            url = "https://api.courier.com/templates"
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            response = requests.post(url, json=template_data, headers=headers)
+            response.raise_for_status()
+            result = response.json()
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Failed to create template: {e}")
+            raise
     
-    def update_template(self, template_id: str, template_data: Dict[str, Any]) -> Dict[str, Any]:
+    def issue_jwt_token(self, scopes: list, expires_in: str = "30 days") -> Dict[str, Any]:
         """
-        Update an existing template in Courier.
+        Issue a JWT token from Courier's API.
         
         Args:
-            template_id (str): Template identifier
-            template_data (dict): Updated template data
+            scopes (list): List of scopes for the token
+            expires_in (str): Token expiration time (e.g., "30 days", "24h")
         
         Returns:
-            dict: API response
+            dict: JWT token data
         """
-        url = f"{self.base_url}/templates/{template_id}"
+        if not self.api_key:
+            raise ValueError("Courier API key not available")
         
-        response = requests.put(url, json=template_data, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
-    
-    def delete_template(self, template_id: str) -> Dict[str, Any]:
-        """
-        Delete a template from Courier.
-        
-        Args:
-            template_id (str): Template identifier
-        
-        Returns:
-            dict: API response
-        """
-        url = f"{self.base_url}/templates/{template_id}"
-        
-        response = requests.delete(url, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
-    
-    def get_brands(self) -> Dict[str, Any]:
-        """
-        Get all brands from Courier.
-        
-        Returns:
-            dict: Brands data
-        """
-        url = f"{self.base_url}/brands"
-        
-        response = requests.get(url, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
-    
-    def get_brand(self, brand_id: str) -> Dict[str, Any]:
-        """
-        Get a specific brand from Courier.
-        
-        Args:
-            brand_id (str): Brand identifier
-        
-        Returns:
-            dict: Brand data
-        """
-        url = f"{self.base_url}/brands/{brand_id}"
-        
-        response = requests.get(url, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
-    
-    def create_brand(self, brand_data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Create a new brand in Courier.
-        
-        Args:
-            brand_data (dict): Brand data
-        
-        Returns:
-            dict: API response with brand ID
-        """
-        url = f"{self.base_url}/brands"
-        
-        response = requests.post(url, json=brand_data, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
-    
-    def update_brand(self, brand_id: str, brand_data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Update an existing brand in Courier.
-        
-        Args:
-            brand_id (str): Brand identifier
-            brand_data (dict): Updated brand data
-        
-        Returns:
-            dict: API response
-        """
-        url = f"{self.base_url}/brands/{brand_id}"
-        
-        response = requests.put(url, json=brand_data, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
+        try:
+            # Use direct API call since SDK doesn't expose auth endpoints
+            import requests
+            
+            url = "https://api.courier.com/auth/issue-token"
+            payload = {
+                "scope": " ".join(scopes),
+                "expires_in": expires_in
+            }
+            
+            headers = {
+                "Accept": "application/json",
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            response = requests.post(url, json=payload, headers=headers)
+            response.raise_for_status()
+            return response.json()
+            
+        except Exception as e:
+            logger.error(f"Failed to issue JWT token: {e}")
+            raise

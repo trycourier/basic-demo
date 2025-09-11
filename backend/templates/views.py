@@ -16,8 +16,8 @@ def get_templates(request):
         templates = courier_client.get_templates()
         
         return Response({
-            'templates': templates.get('results', []),
-            'count': len(templates.get('results', []))
+            'templates': templates.get('items', []),
+            'count': len(templates.get('items', []))
         }, status=status.HTTP_200_OK)
         
     except Exception as e:

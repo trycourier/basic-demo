@@ -51,3 +51,31 @@
   width: 100% !important;
   height: 100% !important;
 }
+
+/* Additional Courier Create specific overrides */
+.designer-content [data-courier-editor] {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+/* Ensure Courier Create root elements are properly sized */
+.designer-content > div > div {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+/* Prevent DOM manipulation conflicts */
+.designer-content * {
+  pointer-events: auto !important;
+}
+
+/* Ensure proper cleanup of Courier Create components */
+.designer-content .courier-editor {
+  position: relative !important;
+  isolation: isolate !important;
+}
+
+/* Prevent React from interfering with Courier Create DOM */
+.designer-content [data-courier-editor] {
+  contain: layout style paint !important;
+}

@@ -1,4 +1,5 @@
 import jwt
+import requests
 from datetime import datetime, timedelta
 from django.conf import settings
 
@@ -15,10 +16,10 @@ def generate_courier_jwt(user_id, scopes=None):
         str: JWT token
     """
     if scopes is None:
-        scopes = ['user_id:{}'.format(user_id), 'read:messages']
+        scopes = ['user_id:{}'.format(user_id), 'tenants:read']
     
-    # Calculate expiration time
-    exp_time = datetime.utcnow() + timedelta(hours=settings.JWT_EXPIRATION_HOURS)
+    # Calculate expiration time (30 days to match Courier API reference)
+    exp_time = datetime.utcnow() + timedelta(days=30)
     
     # Create payload
     payload = {
@@ -42,36 +43,82 @@ def generate_courier_jwt(user_id, scopes=None):
 
 def generate_inbox_jwt(user_id):
     """
-    Generate JWT token specifically for Courier Inbox access.
+    Generate JWT token specifically for Courier Inbox access using Courier's API.
     
     Args:
         user_id (str): The user ID for Courier
     
     Returns:
-        str: JWT token with inbox scopes
+        str: JWT token from Courier API
     """
+    api_key = getattr(settings, 'COURIER_API_KEY', None)
+    if not api_key:
+        raise ValueError("COURIER_API_KEY not configured")
+    
+    tenant_id = getattr(settings, 'COURIER_TENANT_ID', None)
+    if not tenant_id:
+        raise ValueError("COURIER_TENANT_ID not configured")
+    
     scopes = [
         'user_id:{}'.format(user_id),
-        'read:messages'
+        'tenants:read',
+        'tenants:notifications:read',
+        'tenants:notifications:write',
+        'tenant:{}:read'.format(tenant_id),
+        'tenant:{}:notification:read'.format(tenant_id),
+        'tenant:{}:notification:write'.format(tenant_id)
     ]
-    return generate_courier_jwt(user_id, scopes)
+    
+    url = "https://api.courier.com/auth/issue-token"
+    payload = {
+        "scope": " ".join(scopes),
+        "expires_in": "30 days",
+        "tenant_id": tenant_id
+    }
+    
+    headers = {
+        "Accept": "application/json",
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    
+    response = requests.post(url, json=payload, headers=headers)
+    response.raise_for_status()
+    result = response.json()
+    
+    return result.get('token')
 
 
 def generate_create_jwt(user_id, brand_id=None):
     """
-    Generate JWT token for Courier Create template designer access.
+    Generate JWT token for Courier Create template designer access using Courier's API.
     
     Args:
         user_id (str): The user ID for Courier
         brand_id (str, optional): Specific brand ID for restricted access
     
     Returns:
-        str: JWT token with create scopes
+        str: JWT token from Courier API
     """
+    api_key = getattr(settings, 'COURIER_API_KEY', None)
+    if not api_key:
+        raise ValueError("COURIER_API_KEY not configured")
+    
+    tenant_id = getattr(settings, 'COURIER_TENANT_ID', None)
+    if not tenant_id:
+        raise ValueError("COURIER_TENANT_ID not configured")
+    
     scopes = [
         'user_id:{}'.format(user_id),
-        'read:brands',
-        'write:brands'
+        'tenants:read',
+        'tenants:notifications:read',
+        'tenants:notifications:write',
+        'tenants:brand:read',
+        'tenant:{}:read'.format(tenant_id),
+        'tenant:{}:notification:read'.format(tenant_id),
+        'tenant:{}:notification:write'.format(tenant_id),
+        'tenant:{}:brand:read'.format(tenant_id),
+        'tenant:{}:brand:write'.format(tenant_id)
     ]
     
     if brand_id:
@@ -80,7 +127,24 @@ def generate_create_jwt(user_id, brand_id=None):
             'write:brands:{}'.format(brand_id)
         ])
     
-    return generate_courier_jwt(user_id, scopes)
+    url = "https://api.courier.com/auth/issue-token"
+    payload = {
+        "scope": " ".join(scopes),
+        "expires_in": "30 days",
+        "tenant_id": tenant_id
+    }
+    
+    headers = {
+        "Accept": "application/json",
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    
+    response = requests.post(url, json=payload, headers=headers)
+    response.raise_for_status()
+    result = response.json()
+    
+    return result.get('token')
 
 
 def verify_courier_jwt(token):

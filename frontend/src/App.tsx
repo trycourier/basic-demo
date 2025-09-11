@@ -12,6 +12,9 @@ import Inbox from './pages/Inbox/Inbox';
 import Designer from './pages/Designer/Designer';
 import Messaging from './pages/Messaging/Messaging';
 
+// Import Courier React Designer styles
+import '@trycourier/react-designer/styles.css';
+
 // Create Material UI theme
 const theme = createTheme({
   palette: {
