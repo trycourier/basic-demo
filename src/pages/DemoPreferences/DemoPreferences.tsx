@@ -23,7 +23,7 @@ import {
 import { useDemoAuth } from '../../contexts/DemoContext';
 
 // Static demo preferences data
-const EMOD_PREFERENCES = [
+const DEMO_PREFERENCES = [
   {
     topic_id: "DEMO_001",
     topic_name: "User Updates",
