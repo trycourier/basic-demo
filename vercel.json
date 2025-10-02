@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "frontend/package.json",
+      "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "build"
@@ -12,16 +12,11 @@
   "routes": [
     {
       "src": "/static/(.*)",
-      "dest": "/frontend/static/$1"
+      "dest": "/static/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/index.html"
+      "dest": "/index.html"
     }
-  ],
-  "env": {
-    "REACT_APP_COURIER_CLIENT_KEY": "@react_app_courier_client_key",
-    "REACT_APP_DEMO_TENANT_ID": "@react_app_demo_tenant_id",
-    "REACT_APP_DEMO_JWT": "@react_app_demo_jwt"
-  }
+  ]
 }
