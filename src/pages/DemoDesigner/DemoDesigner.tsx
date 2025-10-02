@@ -15,7 +15,7 @@ import './DemoDesigner.css';
 const DemoDesigner: React.FC = () => {
   const { user, jwtToken, tenantId } = useDemoAuth();
   const [activeTab, setActiveTab] = useState(0);
-  const [selectedTemplateId, setSelectedTemplateId] = useState('demo-template-id');
+  const [selectedTemplateId] = useState('demo-template-id');
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);

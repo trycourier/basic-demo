@@ -51,7 +51,7 @@ const DEMO_PREFERENCES = [
 ];
 
 const DemoPreferences: React.FC = () => {
-  const { user, tenantId, jwtToken } = useDemoAuth();
+  const { user, tenantId } = useDemoAuth();
 
   const getStatusColor = (status: string) => {
     switch (status) {

@@ -6,7 +6,7 @@ import {
   Paper,
   Alert,
 } from '@mui/material';
-import { Inbox } from '@trycourier/react-inbox';
+// import { Inbox as CourierInbox } from '@trycourier/react-inbox';
 import { useDemoAuth } from '../../contexts/DemoContext';
 
 const DemoInbox: React.FC = () => {
