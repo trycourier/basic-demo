@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Typography, Alert, Box, Tabs, Tab, Paper } from '@mui/material';
+import { Container, Typography, Alert, Box, Tabs, Tab } from '@mui/material';
 import "@trycourier/react-designer/styles.css";
 import { TemplateEditor, TemplateProvider } from "@trycourier/react-designer";
 import { BrandEditor, BrandProvider } from "@trycourier/react-designer";
@@ -30,16 +30,16 @@ const Designer: React.FC = () => {
       </Box>
       
       <Box mb={2}>
-        <Paper sx={{ p: 2, bgcolor: 'grey.100' }}>
-          <Typography variant="body2" component="div">
+        <Alert severity="info">
+          <Typography variant="body2">
             <strong>Template ID:</strong> {templateId} | 
             <strong> Tenant:</strong> {tenantId} | 
             <strong> User:</strong> {userId}
           </Typography>
-          <Typography variant="body2" component="div">
+          <Typography variant="body2">
             <strong>JWT:</strong> {jwtToken ? `${jwtToken.substring(0, 40)}...` : 'Not loaded'}
           </Typography>
-        </Paper>
+        </Alert>
       </Box>
       
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
