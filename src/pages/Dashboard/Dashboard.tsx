@@ -18,11 +18,10 @@ import {
   Settings as PreferencesIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { useDemoAuth } from '../../contexts/DemoContext';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useDemoAuth();
+  const userId = process.env.REACT_APP_COURIER_USER_ID || 'demo_user';
 
   const features = [
     {
@@ -65,7 +64,7 @@ const Dashboard: React.FC = () => {
           </Typography>
           <Typography variant="body2">
             This is a controlled demo showcasing Courier's core features. 
-            All notifications are sent to the demo user: <strong>{user.email}</strong>
+            All notifications are sent to the demo user: <strong>{userId}</strong>
           </Typography>
         </Alert>
       </Box>
@@ -75,7 +74,7 @@ const Dashboard: React.FC = () => {
           Courier Demo Dashboard
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          Welcome! Explore Courier's features below. Demo user: <strong>{user.first_name} {user.last_name}</strong>
+          Welcome! Explore Courier's features below. Demo user: <strong>{userId}</strong>
         </Typography>
       </Box>
 

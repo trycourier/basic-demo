@@ -20,7 +20,6 @@ import {
   Person as PersonIcon,
   Notifications as NotificationsIcon,
 } from '@mui/icons-material';
-import { useDemoAuth } from '../../contexts/DemoContext';
 
 // Static demo preferences data
 const DEMO_PREFERENCES = [
@@ -51,7 +50,8 @@ const DEMO_PREFERENCES = [
 ];
 
 const DemoPreferences: React.FC = () => {
-  const { user, tenantId } = useDemoAuth();
+  const userId = process.env.REACT_APP_COURIER_USER_ID || 'demo_user';
+  const tenantId = process.env.REACT_APP_DEMO_TENANT_ID;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -100,11 +100,8 @@ const DemoPreferences: React.FC = () => {
                 Demo User
               </Typography>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography><strong>Name:</strong> {user.first_name} {user.last_name}</Typography>
-                <Typography><strong>Username:</strong> {user.username}</Typography>
-                <Typography><strong>Email:</strong> {user.email}</Typography>
-                <Typography><strong>Courier User ID:</strong> {user.courier_user_id}</Typography>
-                <Typography><strong>Tenant ID:</strong> {tenantId}</Typography>
+                <Typography><strong>User ID:</strong> {userId}</Typography>
+                {tenantId && <Typography><strong>Tenant ID:</strong> {tenantId}</Typography>}
               </Box>
             </CardContent>
           </Card>

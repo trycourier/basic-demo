@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -6,11 +6,24 @@ import {
   Paper,
   Alert,
 } from '@mui/material';
-// import { Inbox as CourierInbox } from '@trycourier/react-inbox';
-import { useDemoAuth } from '../../contexts/DemoContext';
+import { CourierInbox, useCourier } from '@trycourier/courier-react';
 
 const DemoInbox: React.FC = () => {
-  const { user, tenantId } = useDemoAuth();
+  const courier = useCourier();
+  const userId = process.env.REACT_APP_COURIER_USER_ID || 'demo_user';
+  const jwtToken = process.env.REACT_APP_DEMO_JWT;
+  const tenantId = process.env.REACT_APP_DEMO_TENANT_ID;
+
+  // Authenticate with Courier using JWT
+  useEffect(() => {
+    if (jwtToken && userId) {
+      courier.auth.signIn({
+        userId,
+        jwt: jwtToken,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container maxWidth="xl">
@@ -19,15 +32,15 @@ const DemoInbox: React.FC = () => {
           📬 Courier Inbox Demo
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          Real-time notifications for demo user: {user.first_name} {user.last_name}
+          Real-time notifications for user: {userId}
         </Typography>
       </Box>
 
       <Box mb={3}>
         <Alert severity="info">
           <Typography variant="body2">
-            <strong>Demo Mode:</strong> This inbox displays notifications sent to{' '}
-            <strong>{user.email}</strong>. Send messages from the Messaging tab to see them appear here.
+            <strong>Live Inbox:</strong> This displays notifications sent to{' '}
+            <strong>{userId}</strong>. Send messages from the Messaging tab to see them appear here.
           </Typography>
         </Alert>
       </Box>
@@ -38,29 +51,12 @@ const DemoInbox: React.FC = () => {
             Courier Inbox Component
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            This would embed the Courier Inbox component with the demo user's notifications.
-            Configure with tenant ID: {tenantId}
+            Live notifications for {userId}
+            {tenantId && ` (Tenant: ${tenantId})`}
           </Typography>
           
-          <Box
-            sx={{
-              height: '90%',
-              border: '2px dashed',
-              borderColor: 'divider',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 1,
-            }}
-          >
-            <Box textAlign="center">
-              <Typography variant="h6" color="text.secondary">
-                Courier Inbox Component
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Would show real-time notifications for the demo user
-              </Typography>
-            </Box>
+          <Box sx={{ height: 'calc(100% - 80px)' }}>
+            <CourierInbox />
           </Box>
         </Paper>
       </Box>

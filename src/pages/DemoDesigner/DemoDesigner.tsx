@@ -9,11 +9,12 @@ import {
 } from '@mui/material';
 import { TemplateEditor, TemplateProvider } from '@trycourier/react-designer';
 import { BrandEditor, BrandProvider } from '@trycourier/react-designer';
-import { useDemoAuth } from '../../contexts/DemoContext';
 import './DemoDesigner.css';
 
 const DemoDesigner: React.FC = () => {
-  const { user, jwtToken, tenantId } = useDemoAuth();
+  const userId = process.env.REACT_APP_COURIER_USER_ID || 'demo_user';
+  const jwtToken = process.env.REACT_APP_DEMO_JWT;
+  const tenantId = process.env.REACT_APP_DEMO_TENANT_ID;
   const [activeTab, setActiveTab] = useState(0);
   const [selectedTemplateId] = useState('demo-template-id');
 
@@ -28,7 +29,7 @@ const DemoDesigner: React.FC = () => {
           🎨 Courier Create Demo
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          Designing templates for the demo user: {user.first_name} {user.last_name}
+          Designing templates for user: {userId}
         </Typography>
       </Box>
 
@@ -51,7 +52,7 @@ const DemoDesigner: React.FC = () => {
             <strong>Tenant ID:</strong> {tenantId}
           </Typography>
           <Typography variant="body2" component="div">
-            <strong>Demo User:</strong> {user.email}
+            <strong>User ID:</strong> {userId}
           </Typography>
         </Paper>
       </Box>
@@ -84,10 +85,10 @@ const DemoDesigner: React.FC = () => {
                 }}
                 variables={{
                   "user": {
-                    "firstName": user.first_name,
-                    "lastName": user.last_name,
-                    "email": user.email,
-                    "phoneNumber": user.phone_number || "+1234567890"
+                    "firstName": "Demo",
+                    "lastName": "User",
+                    "email": `${userId}@courier.com`,
+                    "phoneNumber": "+1234567890"
                   },
                   "company": {
                     "name": "Courier Demo Inc",

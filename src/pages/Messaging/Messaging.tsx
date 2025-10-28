@@ -15,10 +15,10 @@ import {
   InputLabel,
 } from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
-import { useDemoAuth } from '../../contexts/DemoContext';
 
 const DemoMessaging: React.FC = () => {
-  const { user, tenantId } = useDemoAuth();
+  const userId = process.env.REACT_APP_COURIER_USER_ID || 'demo_user';
+  const tenantId = process.env.REACT_APP_DEMO_TENANT_ID;
   const [messageType, setMessageType] = useState('welcome');
   const [isSending, setIsSending] = useState(false);
   const [lastSent, setLastSent] = useState<string | null>(null);
@@ -47,7 +47,7 @@ const DemoMessaging: React.FC = () => {
           📨 Send Demo Messages
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          Send notifications to the demo user: {user.first_name} {user.last_name}
+          Send notifications to user: {userId}
         </Typography>
       </Box>
 
@@ -55,7 +55,7 @@ const DemoMessaging: React.FC = () => {
         <Alert severity="info">
           <Typography variant="body2">
             <strong>Demo Mode:</strong> Messages will be sent to{' '}
-            <strong>{user.email}</strong> and appear in their inbox. Use tenant ID: {tenantId}
+            <strong>{userId}</strong> and appear in their inbox. {tenantId && `Use tenant ID: ${tenantId}`}
           </Typography>
         </Alert>
       </Box>
@@ -88,7 +88,7 @@ const DemoMessaging: React.FC = () => {
                 <TextField
                   fullWidth
                   label="Recipient"
-                  value={user.email}
+                  value={userId}
                   disabled
                   variant="outlined"
                 />
@@ -132,10 +132,8 @@ const DemoMessaging: React.FC = () => {
               </Typography>
               
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography><strong>Demo User:</strong> {user.first_name} {user.last_name}</Typography>
-                <Typography><strong>Email:</strong> {user.email}</Typography>
-                <Typography><strong>Phone:</strong> {user.phone_number}</Typography>
-                <Typography><strong>Tenant ID:</strong> {tenantId}</Typography>
+                <Typography><strong>User ID:</strong> {userId}</Typography>
+                {tenantId && <Typography><strong>Tenant ID:</strong> {tenantId}</Typography>}
               </Box>
 
               <Box mt={3}>
@@ -188,13 +186,13 @@ const DemoMessaging: React.FC = () => {
                 <br />
                 {'  "message": {'}
                 <br />
-                {'    "to": "'}{user.email}{'",'}
+                {'    "to": "'}{userId}{'",'}
                 <br />
                 {'    "template": "'}{messageType}{'-template",'}
                 <br />
                 {'    "data": {'}
                 <br />
-                {'      "username": "'}{user.first_name}{'"'}
+                {'      "username": "'}{userId}{'"'}
                 <br />
                 {'    }'}
                 <br />

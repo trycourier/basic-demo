@@ -18,6 +18,7 @@ import {
   Menu as MenuIcon,
   Dashboard as DashboardIcon,
   Inbox as InboxIcon,
+  Archive as ArchiveIcon,
   Palette as DesignIcon,
   Message as MessageIcon,
   Settings as PreferencesIcon,
@@ -52,6 +53,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
     { text: 'Inbox', icon: <InboxIcon />, path: '/inbox' },
+    { text: 'Archived', icon: <ArchiveIcon />, path: '/archived' },
     { text: 'Designer', icon: <DesignIcon />, path: '/designer' },
     { text: 'Messaging', icon: <MessageIcon />, path: '/messaging' },
     { text: 'Preferences', icon: <PreferencesIcon />, path: '/preferences' },
