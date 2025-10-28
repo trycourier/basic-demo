@@ -1,80 +1,58 @@
 import React, { useState } from 'react';
-import {
-  Container,
-  Typography,
-  Box,
-  Tabs,
-  Tab,
-  Paper,
-} from '@mui/material';
-import { TemplateEditor, TemplateProvider } from '@trycourier/react-designer';
-import { BrandEditor, BrandProvider } from '@trycourier/react-designer';
-import './Designer.css';
+import { Container, Typography, Alert, Box, Tabs, Tab, Paper } from '@mui/material';
+import "@trycourier/react-designer/styles.css";
+import { TemplateEditor, TemplateProvider } from "@trycourier/react-designer";
+import { BrandEditor, BrandProvider } from "@trycourier/react-designer";
 
 const Designer: React.FC = () => {
   const userId = process.env.REACT_APP_COURIER_USER_ID || 'demo_user';
   const jwtToken = process.env.REACT_APP_DEMO_JWT;
   const tenantId = process.env.REACT_APP_DEMO_TENANT_ID;
   const [activeTab, setActiveTab] = useState(0);
-  const [selectedTemplateId] = useState('template-id');
+  const [templateId] = useState('template-id');
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setActiveTab(newValue);
-  };
+  if (!tenantId || !jwtToken) {
+    return (
+      <Container maxWidth="xl">
+        <Typography variant="h4" gutterBottom>Courier Template Designer</Typography>
+        <Alert severity="error">Missing REACT_APP_DEMO_TENANT_ID or REACT_APP_DEMO_JWT</Alert>
+      </Container>
+    );
+  }
 
   return (
-    <div className="designer-container">
-    <Container maxWidth="xl" sx={{ height: '100vh', py: 2 }}>
+    <Container maxWidth="xl" sx={{ height: '90vh', py: 2 }}>
       <Box mb={2}>
-        <Typography variant="h4" gutterBottom>
-          🎨 Courier Template Designer
-        </Typography>
+        <Typography variant="h4" gutterBottom>🎨 Courier Template Designer</Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          Design and edit notification templates
+          Create and customize notification templates
         </Typography>
       </Box>
-
-      {/* Info Banner */}
-      <Box mb={2}>
-        <Paper sx={{ p: 2, bgcolor: 'info.light', color: 'info.contrastText' }}>
-          <Typography variant="body2">
-            <strong>Template Design:</strong> Create and customize notification templates. Use template ID: <code>{selectedTemplateId}</code>
-          </Typography>
-        </Paper>
-      </Box>
-
-      {/* Debug Info */}
+      
       <Box mb={2}>
         <Paper sx={{ p: 2, bgcolor: 'grey.100' }}>
           <Typography variant="body2" component="div">
-            <strong>JWT Token:</strong> {jwtToken ? `${jwtToken.substring(0, 30)}...` : 'Not loaded'}
+            <strong>Template ID:</strong> {templateId} | 
+            <strong> Tenant:</strong> {tenantId} | 
+            <strong> User:</strong> {userId}
           </Typography>
           <Typography variant="body2" component="div">
-            <strong>Tenant ID:</strong> {tenantId}
-          </Typography>
-          <Typography variant="body2" component="div">
-            <strong>User ID:</strong> {userId}
+            <strong>JWT:</strong> {jwtToken ? `${jwtToken.substring(0, 40)}...` : 'Not loaded'}
           </Typography>
         </Paper>
       </Box>
-
-      {/* Tabs */}
+      
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
-        <Tabs value={activeTab} onChange={handleTabChange} aria-label="designer tabs">
+        <Tabs value={activeTab} onChange={(e, v) => setActiveTab(v)}>
           <Tab label="Template Editor" />
           <Tab label="Brand Editor" />
         </Tabs>
       </Box>
-
-      {/* Content Area */}
-      <Box className="designer-content" sx={{ height: '70vh' }}>
-        {activeTab === 0 && tenantId && jwtToken && (
-          <Box sx={{ height: '100%', width: '100%', position: 'relative' }}>
-            <TemplateProvider
-              templateId={selectedTemplateId}
-              tenantId={tenantId}
-              token={jwtToken}
-            >
+      
+      <Box sx={{ height: '70vh' }}>
+        {activeTab === 0 && (
+          <Box sx={{ height: '100%', width: '100%' }}>
+            <TemplateProvider templateId={templateId} tenantId={tenantId} token={jwtToken}>
               <TemplateEditor
                 theme={{
                   background: '#ffffff',
@@ -85,19 +63,19 @@ const Designer: React.FC = () => {
                   radius: '8px',
                 }}
                 variables={{
-                  "user": {
-                    "firstName": "User",
-                    "lastName": "Name",
-                    "email": `${userId}@courier.com`,
-                    "phoneNumber": "+1234567890"
+                  user: {
+                    firstName: "User",
+                    lastName: "Name",
+                    email: `${userId}@courier.com`,
+                    phoneNumber: "+1234567890"
                   },
-                  "company": {
-                    "name": "Example Company",
-                    "address": {
-                      "street": "123 Main Street",
-                      "city": "San Francisco",
-                      "state": "CA",
-                      "zipCode": "94105"
+                  company: {
+                    name: "Example Company",
+                    address: {
+                      street: "123 Main Street",
+                      city: "San Francisco",
+                      state: "CA",
+                      zipCode: "94105"
                     }
                   }
                 }}
@@ -105,20 +83,16 @@ const Designer: React.FC = () => {
             </TemplateProvider>
           </Box>
         )}
-
-        {activeTab === 1 && tenantId && jwtToken && (
-          <Box sx={{ height: '100%', width: '100%', position: 'relative' }}>
-            <BrandProvider
-              tenantId={tenantId}
-              token={jwtToken}
-            >
+        
+        {activeTab === 1 && (
+          <Box sx={{ height: '100%', width: '100%' }}>
+            <BrandProvider tenantId={tenantId} token={jwtToken}>
               <BrandEditor />
             </BrandProvider>
           </Box>
         )}
       </Box>
     </Container>
-    </div>
   );
 };
 
