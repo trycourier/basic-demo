@@ -23,6 +23,7 @@ const Designer: React.FC = () => {
   };
 
   return (
+    <div className="designer-container">
     <Container maxWidth="xl" sx={{ height: '100vh', py: 2 }}>
       <Box mb={2}>
         <Typography variant="h4" gutterBottom>
@@ -66,7 +67,7 @@ const Designer: React.FC = () => {
       </Box>
 
       {/* Content Area */}
-      <Box sx={{ height: '70vh' }}>
+      <Box className="designer-content" sx={{ height: '70vh' }}>
         {activeTab === 0 && tenantId && jwtToken && (
           <Box sx={{ height: '100%', width: '100%', position: 'relative' }}>
             <TemplateProvider
@@ -117,6 +118,7 @@ const Designer: React.FC = () => {
         )}
       </Box>
     </Container>
+    </div>
   );
 };
 
