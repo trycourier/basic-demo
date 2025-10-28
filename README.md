@@ -1,13 +1,13 @@
-# Courier Demo - Sales Showcase SPA
+# Courier Showcase - Courier v8 React SPA
 
-A pure frontend Single Page Application showcasing Courier's core features for sales demos. **No backend, no database, no authentication required.**
+A React application showcasing Courier's core features using Courier React v8.2.0. Demonstrates Inbox, Template Designer, Messaging, and Preferences with real Courier integration.
 
 ## 🎯 What This Is
 
-- **Pure Frontend SPA** - Built with React, Material-UI, and Courier SDKs
-- **Sales Demo Ready** - Instant access, controlled environment
+- **React SPA** - Built with React 19, Material-UI, and Courier React v8.2.0
+- **Production Ready** - Uses real Courier APIs and authentication
 - **Vercel Deployed** - Static deployment with environment variables
-- **Courier Integration** - Live Courier Create, Inbox, and API demonstrations
+- **Courier Integration** - Live Inbox, Template Designer, and API demonstrations
 
 ## 🚀 Quick Start
 
@@ -19,36 +19,41 @@ npm install
 npm start
 ```
 
-### 2. For Production (Vercel)
+### 2. Configure Environment Variables
 
-**Prerequisites:** Courier API Key, Client Key, and Tenant ID
+Create a `.env` file in the root directory:
 
-**Manual JWT Generation Required:**
+```bash
+REACT_APP_COURIER_USER_ID=your-courier-user-id
+REACT_APP_DEMO_JWT=your-jwt-token
+REACT_APP_DEMO_TENANT_ID=your-tenant-id
+```
+
+### 3. Generate JWT Token
+
+You need a valid JWT token to authenticate with Courier. Generate one using:
+
 ```bash
 curl -X POST https://api.courier.com/auth/issue-token \
   -H "Authorization: Bearer YOUR_COURIER_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "tenant_id": "YOUR_TENANT_ID",
-    "scope": "user_id:demo_user_courier_id tenants:read tenants:notifications:read tenants:notifications:write tenants:brand:read tenant:YOUR_TENANT_ID:read tenant:YOUR_TENANT_ID:notification:read tenant:YOUR_TENANT_ID:notification:write tenant:YOUR_TENANT_ID:brand:read tenant:YOUR_TENANT_ID:brand:write",
-    "expires_in": "6 months"
+    "scope": "user_id:YOUR_USER_ID inbox:read:messages inbox:write:events",
+    "expires_in": "30 days"
   }'
 ```
 
-**Vercel Environment Variables:**
-```
-REACT_APP_COURIER_CLIENT_KEY=ck_prod_xxxxx
-REACT_APP_DEMO_TENANT_ID=tn_xxxxx  
-REACT_APP_DEMO_JWT=eyJhbGciOiJIUzI1NiIsInR5cCI...
-```
+See `ENV_SETUP.md` for detailed instructions.
 
 ## 🎨 Features
 
 - ✅ **Dashboard** - Overview of all Courier features
+- ✅ **Inbox** - Live Courier Inbox with real-time notifications
+- ✅ **Archived Notifications** - Example of fetching archived messages (v8 API)
 - ✅ **Template Designer** - Live Courier Create integration
-- ✅ **Preferences Viewer** - Static preference display
-- ✅ **Inbox Demo** - Courier Inbox provider demonstration
-- ✅ **Message Demo** - Direct Courier Send API integration
+- ✅ **Preferences Viewer** - Notification preference display
+- ✅ **Messaging** - Message sending interface
+- ✅ **Courier v8.2.0** - Latest Courier React SDK
 - ✅ **Mobile Responsive** - Material-UI design system
 
 ## 🔧 Architecture
@@ -56,67 +61,57 @@ REACT_APP_DEMO_JWT=eyJhbGciOiJIUzI1NiIsInR5cCI...
 ```
 / (root)
 ├── src/
-│   ├── contexts/DemoContext.tsx    # Static demo user + environment variables
 │   ├── pages/
-│   │   ├── Dashboard/              # Main dashboard with feature cards
-│   │   ├── DemoDesigner/           # Courier Create integration
-│   │   ├── DemoPreferences/        # Static preferences data
-│   │   ├── Inbox/                  # Courier Inbox provider
-│   │   └── Messaging/              # Direct Courier API integration
-│   ├── components/Layout/          # Navigation sidebar
-│   ├── App.tsx                     # Main app with routing
-│   └── index.tsx                   # Entry point
-├── public/                         # Static assets
-├── package.json                    # Dependencies
-├── tsconfig.json                  # TypeScript config
-├── vercel.json                    # Vercel deployment config
-└── README.md                      # This file
+│   │   ├── Dashboard/                 # Main dashboard with feature cards
+│   │   ├── Inbox/                     # Courier Inbox component
+│   │   ├── ArchivedNotifications/     # Archived messages example
+│   │   ├── Designer/                  # Courier Create integration
+│   │   ├── Preferences/               # Notification preferences
+│   │   └── Messaging/                 # Message sending
+│   ├── components/Layout/              # Navigation sidebar
+│   ├── App.tsx                        # Main app with routing
+│   └── index.tsx                      # Entry point
+├── public/                            # Static assets
+├── package.json                       # Dependencies
+├── tsconfig.json                      # TypeScript config
+├── vercel.json                        # Vercel deployment config
+├── ENV_SETUP.md                       # Environment setup guide
+└── README.md                          # This file
 ```
 
 ## 🔧 Configuration
 
-### Demo User (Edit `src/contexts/DemoContext.tsx`)
-```typescript
-const demoUser: DemoUser = {
-  id: 1,
-  username: 'demo_user',                    // ← Customize
-  email: 'demo@company.com',               // ← Customize  
-  first_name: 'Demo',                       // ← Customize
-  last_name: 'User',                        // ← Customize
-  courier_user_id: 'demo_user_courier_id',  // ← MUST match JWT
-  phone_number: '+15551234567',             // ← Customize
-};
-```
-
 ### Environment Variables
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `REACT_APP_COURIER_CLIENT_KEY` | Courier client key | `ck_prod_demo123...` |
-| `REACT_APP_DEMO_TENANT_ID` | Courier tenant ID | `tn_demo123...` |
-| `REACT_APP_DEMO_JWT` | Pre-generated JWT | `eyJhbGciOiJIUzI1Ni...` |
+| `REACT_APP_COURIER_USER_ID` | Courier user ID | `demo_user` |
+| `REACT_APP_DEMO_JWT` | JWT token for authentication | `eyJhbGciOiJIUzI1Ni...` |
+| `REACT_APP_DEMO_TENANT_ID` | Courier tenant ID (optional) | `tn_xxxxx...` |
 
 **⚠️ Important:** 
-- JWT `user_id` scope must match `courier_user_id` above
-- Generate JWT manually - cannot be automated
-- JWT expires every 6 months - regenerate and update Vercel env vars
+- JWT `user_id` scope must match `REACT_APP_COURIER_USER_ID`
+- JWT must have `inbox:read:messages` and `inbox:write:events` scopes
+- Generate JWT using the API (see ENV_SETUP.md)
+- JWT expires based on `expires_in` parameter when generating
 
-## 📱 Perfect for Sales
+## 📱 Key Features
 
-- **Zero Configuration** - Sales team just opens URL
-- **No Demo Fails** - Controlled environment with static data
+- **Real Courier Integration** - Uses actual Courier APIs and authentication
+- **Latest SDK** - Built with Courier React v8.2.0
 - **Fast Loading** - Pure static assets on CDN
 - **Always Available** - No server maintenance required
 - **Professional Look** - Material-UI design system
+- **Archived Messages Example** - Demonstrates Courier v8 API usage
 
 ## 🔄 Maintenance
 
-**JWT Token Refresh (Every 6 months):**
-1. Generate new JWT using same curl command above
-2. Update `REACT_APP_DEMO_JWT` in Vercel environment variables
+**JWT Token Refresh:**
+1. Generate new JWT using the curl command in ENV_SETUP.md
+2. Update `REACT_APP_DEMO_JWT` in environment variables
 3. Vercel auto-redeploys on environment changes
 
-**Changing Demo User:**
-1. Update `courier_user_id` in `src/contexts/DemoContext.tsx`
+**Changing User:**
+1. Update `REACT_APP_COURIER_USER_ID` in environment variables
 2. Regenerate JWT with matching `user_id:NEW_VALUE` in scope
 3. Update Vercel environment variables
 
@@ -136,19 +131,26 @@ const demoUser: DemoUser = {
 
 ## 🆘 Troubleshooting
 
-**Courier Create doesn't load:**
-- Check `REACT_APP_COURIER_CLIENT_KEY` is correct
-- Verify `REACT_APP_DEMO_TENANT_ID` matches Courier account
+**Inbox doesn't load:**
+- Check `REACT_APP_DEMO_JWT` is set correctly
+- Verify JWT hasn't expired
+- Check browser console for authentication errors
 
 **JWT errors:**
 - Verify `REACT_APP_DEMO_JWT` is exact token from API response
-- Check JWT hasn't expired
-- Ensure JWT scope includes required permissions
+- Check JWT hasn't expired  
+- Ensure JWT scope includes `inbox:read:messages` and other required permissions
+- Verify `REACT_APP_COURIER_USER_ID` matches the user_id in JWT scope
 
-**Messaging fails:**
-- Check all 3 environment variables are set in Vercel
-- Verify Courier account has send permissions
+**Designer doesn't load:**
+- Check `REACT_APP_DEMO_TENANT_ID` is set
+- Verify tenant ID matches your Courier account
+
+**General:**
+- Check all environment variables are set
+- Verify Courier account has necessary permissions
+- Check browser console for detailed error messages
 
 ---
 
-**Ready for Sales Demos!** 🎯 **No Backend Required!** 🚀
+**Built with Courier React v8.2.0** 🚀 **Production Ready** ✨

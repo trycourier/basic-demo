@@ -9,14 +9,14 @@ import {
 } from '@mui/material';
 import { TemplateEditor, TemplateProvider } from '@trycourier/react-designer';
 import { BrandEditor, BrandProvider } from '@trycourier/react-designer';
-import './DemoDesigner.css';
+import './Designer.css';
 
-const DemoDesigner: React.FC = () => {
+const Designer: React.FC = () => {
   const userId = process.env.REACT_APP_COURIER_USER_ID || 'demo_user';
   const jwtToken = process.env.REACT_APP_DEMO_JWT;
   const tenantId = process.env.REACT_APP_DEMO_TENANT_ID;
   const [activeTab, setActiveTab] = useState(0);
-  const [selectedTemplateId] = useState('demo-template-id');
+  const [selectedTemplateId] = useState('template-id');
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -26,18 +26,18 @@ const DemoDesigner: React.FC = () => {
     <Container maxWidth="xl" sx={{ height: '100vh', py: 2 }}>
       <Box mb={2}>
         <Typography variant="h4" gutterBottom>
-          🎨 Courier Create Demo
+          🎨 Courier Template Designer
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          Designing templates for user: {userId}
+          Design and edit notification templates
         </Typography>
       </Box>
 
-      {/* Demo Info Banner */}
+      {/* Info Banner */}
       <Box mb={2}>
         <Paper sx={{ p: 2, bgcolor: 'info.light', color: 'info.contrastText' }}>
           <Typography variant="body2">
-            <strong>Demo Mode:</strong> This is a controlled environment. Use template ID: <code>{selectedTemplateId}</code>
+            <strong>Template Design:</strong> Create and customize notification templates. Use template ID: <code>{selectedTemplateId}</code>
           </Typography>
         </Paper>
       </Box>
@@ -85,15 +85,15 @@ const DemoDesigner: React.FC = () => {
                 }}
                 variables={{
                   "user": {
-                    "firstName": "Demo",
-                    "lastName": "User",
+                    "firstName": "User",
+                    "lastName": "Name",
                     "email": `${userId}@courier.com`,
                     "phoneNumber": "+1234567890"
                   },
                   "company": {
-                    "name": "Courier Demo Inc",
+                    "name": "Example Company",
                     "address": {
-                      "street": "123 Demo Street",
+                      "street": "123 Main Street",
                       "city": "San Francisco",
                       "state": "CA",
                       "zipCode": "94105"
@@ -120,4 +120,4 @@ const DemoDesigner: React.FC = () => {
   );
 };
 
-export default DemoDesigner;
+export default Designer;

@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
 
-const DemoMessaging: React.FC = () => {
+const Messaging: React.FC = () => {
   const userId = process.env.REACT_APP_COURIER_USER_ID || 'demo_user';
   const tenantId = process.env.REACT_APP_DEMO_TENANT_ID;
   const [messageType, setMessageType] = useState('welcome');
@@ -44,7 +44,7 @@ const DemoMessaging: React.FC = () => {
     <Container maxWidth="lg">
       <Box mb={4}>
         <Typography variant="h4" component="h1" gutterBottom>
-          📨 Send Demo Messages
+          📨 Send Messages
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
           Send notifications to user: {userId}
@@ -54,8 +54,8 @@ const DemoMessaging: React.FC = () => {
       <Box mb={3}>
         <Alert severity="info">
           <Typography variant="body2">
-            <strong>Demo Mode:</strong> Messages will be sent to{' '}
-            <strong>{userId}</strong> and appear in their inbox. {tenantId && `Use tenant ID: ${tenantId}`}
+            <strong>Messaging:</strong> Messages will be sent to{' '}
+            <strong>{userId}</strong> and appear in their inbox. {tenantId && `Tenant ID: ${tenantId}`}
           </Typography>
         </Alert>
       </Box>
@@ -99,7 +99,7 @@ const DemoMessaging: React.FC = () => {
                   multiline
                   rows={4}
                   placeholder="Enter your message content here..."
-                  defaultValue="Hello! This is a demo message from Courier."
+                  defaultValue="Hello! This is a test message from Courier."
                 />
 
                 <Button
@@ -123,12 +123,12 @@ const DemoMessaging: React.FC = () => {
           </Card>
         </Grid>
 
-        {/* Demo Info */}
+        {/* Info */}
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
-                Demo Configuration
+                Configuration
               </Typography>
               
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -208,4 +208,4 @@ const DemoMessaging: React.FC = () => {
   );
 };
 
-export default DemoMessaging;
+export default Messaging;

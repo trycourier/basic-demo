@@ -49,7 +49,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     }
   };
 
-  // Simplified menu items for demo - no auth needed
+  // Menu items
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
     { text: 'Inbox', icon: <InboxIcon />, path: '/inbox' },
@@ -63,7 +63,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <Box>
       <Toolbar>
         <Typography variant="h6" noWrap component="div">
-          Courier Demo
+          Courier
         </Typography>
       </Toolbar>
       <List>
@@ -102,7 +102,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Courier Demo - Sales Showcase
+            Courier Showcase
           </Typography>
         </Toolbar>
       </AppBar>

@@ -21,10 +21,10 @@ import {
   Notifications as NotificationsIcon,
 } from '@mui/icons-material';
 
-// Static demo preferences data
-const DEMO_PREFERENCES = [
+// Static preferences data
+const EXAMPLE_PREFERENCES = [
   {
-    topic_id: "DEMO_001",
+    topic_id: "TOPIC_001",
     topic_name: "User Updates",
     status: "OPTED_IN",
     default_status: "OPTED_IN",
@@ -32,7 +32,7 @@ const DEMO_PREFERENCES = [
     custom_routing: [],
   },
   {
-    topic_id: "DEMO_002",
+    topic_id: "TOPIC_002",
     topic_name: "Access Notifications",
     status: "OPTED_IN", 
     default_status: "OPTED_IN",
@@ -40,7 +40,7 @@ const DEMO_PREFERENCES = [
     custom_routing: [],
   },
   {
-    topic_id: "EMO_003",
+    topic_id: "TOPIC_003",
     topic_name: "Marketing",
     status: "OPTED_OUT",
     default_status: "OPTED_OUT",
@@ -49,7 +49,7 @@ const DEMO_PREFERENCES = [
   }
 ];
 
-const DemoPreferences: React.FC = () => {
+const Preferences: React.FC = () => {
   const userId = process.env.REACT_APP_COURIER_USER_ID || 'demo_user';
   const tenantId = process.env.REACT_APP_DEMO_TENANT_ID;
 
@@ -83,21 +83,21 @@ const DemoPreferences: React.FC = () => {
     <Container maxWidth="lg">
       <Box mb={4}>
         <Typography variant="h4" component="h1">
-          <SettingsIcon sx={{ mr: 2, verticalAlign: 'middle' }} />Demo Preferences Viewer
+          <SettingsIcon sx={{ mr: 2, verticalAlign: 'middle' }} />Preferences Viewer
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          Viewing notification preferences for the demo user in a controlled environment
+          Viewing notification preferences for {userId}
         </Typography>
       </Box>
 
       <Grid container spacing={3}>
-        {/* Demo User Info */}
+        {/* User Info */}
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 <PersonIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-                Demo User
+                User Info
               </Typography>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 <Typography><strong>User ID:</strong> {userId}</Typography>
@@ -107,24 +107,21 @@ const DemoPreferences: React.FC = () => {
           </Card>
         </Grid>
 
-        {/* Demo Environment Info */}
+        {/* Environment Info */}
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
-                Demo Environment
+                Environment
               </Typography>
               <Typography variant="body2" sx={{ mb: 1 }}>
-                This is a demo environment showing Courier preferences functionality.
+                This environment shows Courier preferences functionality.
               </Typography>
               <Typography variant="body2" sx={{ mb: 1 }}>
-                <strong>No user management:</strong> Uses pre-configured demo user
-              </Typography>
-              <Typography variant="body2" sx={{ mb: 1 }}>
-                <strong>Read-only:</strong> Preferences are displayed but not editable in demo mode
+                <strong>Read-only:</strong> Preferences are displayed for viewing
               </Typography>
               <Typography variant="body2">
-                <strong>Controlled data:</strong> All notifications go to demo@courier.com
+                <strong>User ID:</strong> {userId}
               </Typography>
             </CardContent>
           </Card>
@@ -137,7 +134,7 @@ const DemoPreferences: React.FC = () => {
           <CardContent>
             <Typography variant="h6" gutterBottom>
               <NotificationsIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-              Topic Preferences (Demo Data)
+              Topic Preferences
             </Typography>
             
             <TableContainer component={Paper}>
@@ -152,7 +149,7 @@ const DemoPreferences: React.FC = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {DEMO_PREFERENCES.map((topic) => (
+                  {EXAMPLE_PREFERENCES.map((topic) => (
                     <TableRow key={topic.topic_id}>
                       <TableCell>{topic.topic_name}</TableCell>
                       <TableCell>
@@ -200,4 +197,4 @@ const DemoPreferences: React.FC = () => {
   );
 };
 
-export default DemoPreferences;
+export default Preferences;

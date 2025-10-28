@@ -52,16 +52,16 @@ const ArchivedNotifications: React.FC = () => {
     <Container maxWidth="md">
       <Box mb={4}>
         <Typography variant="h4" component="h1" gutterBottom>
-          📦 Archived Notifications (Courier v8)
+          📦 Archived Notifications
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          Demo for user: {userId}
+          User: {userId}
         </Typography>
       </Box>
 
       <Box mb={3}>
         <Alert severity="info">
-          This demo shows how to fetch and display archived notifications using Courier v8.2.0.
+          Fetch and display archived notifications using Courier v8.2.0.
         </Alert>
       </Box>
 

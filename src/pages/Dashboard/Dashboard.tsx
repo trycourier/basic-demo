@@ -47,7 +47,7 @@ const Dashboard: React.FC = () => {
     },
     {
       title: 'Preferences Viewer',
-      description: 'View demo user notification preferences',
+      description: 'View user notification preferences',
       icon: <PreferencesIcon sx={{ fontSize: 40 }} />,
       path: '/preferences',
       color: '#9c27b0',
@@ -56,25 +56,24 @@ const Dashboard: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      {/* Demo Banner */}
       <Box mb={3}>
         <Alert severity="info" sx={{ mb: 2 }}>
           <Typography variant="h6" gutterBottom>
-            🎯 Sales Demo Environment
+            🎯 Courier Showcase
           </Typography>
           <Typography variant="body2">
-            This is a controlled demo showcasing Courier's core features. 
-            All notifications are sent to the demo user: <strong>{userId}</strong>
+            Showcasing Courier's core features. 
+            All notifications are sent to: <strong>{userId}</strong>
           </Typography>
         </Alert>
       </Box>
 
       <Box mb={4}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Courier Demo Dashboard
+          Courier Dashboard
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
-          Welcome! Explore Courier's features below. Demo user: <strong>{userId}</strong>
+          Explore Courier's features. User: <strong>{userId}</strong>
         </Typography>
       </Box>
 
@@ -127,7 +126,7 @@ const Dashboard: React.FC = () => {
       <Box mt={6}>
         <Paper sx={{ p: 3 }}>
           <Typography variant="h6" gutterBottom>
-            🚀 What You Can Demo
+            🚀 Features Available
           </Typography>
           
           <Grid container spacing={2}>
@@ -185,7 +184,7 @@ const Dashboard: React.FC = () => {
 
           <Box mt={3}>
             <Typography variant="body2" color="primary.main">
-              <strong>🎯 Perfect for Sales Demos:</strong> No login required, 
+              <strong>🎯 Easy to Use:</strong> No login required, 
               controlled environment, all features working with live Courier integration.
             </Typography>
           </Box>
