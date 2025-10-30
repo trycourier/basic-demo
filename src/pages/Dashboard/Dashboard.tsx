@@ -14,7 +14,6 @@ import {
 import {
   Inbox as InboxIcon,
   Palette as DesignIcon,
-  Message as MessageIcon,
   Settings as PreferencesIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -37,13 +36,6 @@ const Dashboard: React.FC = () => {
       icon: <DesignIcon sx={{ fontSize: 40 }} />,
       path: '/designer',
       color: '#dc004e',
-    },
-    {
-      title: 'Send Messages',
-      description: 'Send notifications through multiple channels',
-      icon: <MessageIcon sx={{ fontSize: 40 }} />,
-      path: '/messaging',
-      color: '#2e7d32',
     },
     {
       title: 'Preferences Viewer',

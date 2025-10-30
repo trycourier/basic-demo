@@ -20,7 +20,6 @@ import {
   Inbox as InboxIcon,
   Archive as ArchiveIcon,
   Palette as DesignIcon,
-  Message as MessageIcon,
   Settings as PreferencesIcon,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -55,7 +54,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { text: 'Inbox', icon: <InboxIcon />, path: '/inbox' },
     { text: 'Archived', icon: <ArchiveIcon />, path: '/archived' },
     { text: 'Designer', icon: <DesignIcon />, path: '/designer' },
-    { text: 'Messaging', icon: <MessageIcon />, path: '/messaging' },
     { text: 'Preferences', icon: <PreferencesIcon />, path: '/preferences' },
   ];
 

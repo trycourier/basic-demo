@@ -1,6 +1,6 @@
 # Courier Showcase - Courier v8 React SPA
 
-A React application showcasing Courier's core features using Courier React v8.2.0. Demonstrates Inbox, Template Designer, Messaging, and Preferences with real Courier integration.
+A React application showcasing Courier's core features using Courier React v8.2.0. Demonstrates Inbox, Template Designer, and Preferences with real Courier integration.
 
 ## 🎯 What This Is
 
@@ -52,7 +52,6 @@ See `ENV_SETUP.md` for detailed instructions.
 - ✅ **Archived Notifications** - Example of fetching archived messages (v8 API)
 - ✅ **Template Designer** - Live Courier Create integration
 - ✅ **Preferences Viewer** - Notification preference display
-- ✅ **Messaging** - Message sending interface
 - ✅ **Courier v8.2.0** - Latest Courier React SDK
 - ✅ **Mobile Responsive** - Material-UI design system
 
@@ -66,8 +65,7 @@ See `ENV_SETUP.md` for detailed instructions.
 │   │   ├── Inbox/                     # Courier Inbox component
 │   │   ├── ArchivedNotifications/     # Archived messages example
 │   │   ├── Designer/                  # Courier Create integration
-│   │   ├── Preferences/               # Notification preferences
-│   │   └── Messaging/                 # Message sending
+│   │   └── Preferences/               # Notification preferences
 │   ├── components/Layout/              # Navigation sidebar
 │   ├── App.tsx                        # Main app with routing
 │   └── index.tsx                      # Entry point

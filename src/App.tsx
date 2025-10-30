@@ -7,7 +7,6 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import Designer from './pages/Designer/Designer';
 import Preferences from './pages/Preferences/Preferences';
 import Inbox from './pages/Inbox/Inbox';
-import Messaging from './pages/Messaging/Messaging';
 import ArchivedNotifications from './pages/ArchivedNotifications/ArchivedNotifications';
 
 // Create Material UI theme
@@ -41,7 +40,6 @@ function App() {
             <Route path="/preferences" element={<Preferences />} />
             <Route path="/inbox" element={<Inbox />} />
             <Route path="/archived" element={<ArchivedNotifications />} />
-            <Route path="/messaging" element={<Messaging />} />
           </Routes>
         </Layout>
       </Router>
