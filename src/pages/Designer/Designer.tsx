@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Typography, Alert, Box, Tabs, Tab } from '@mui/material';
+import { Container, Typography, Alert, Box, Tabs, Tab, Switch, FormControlLabel } from '@mui/material';
 import "@trycourier/react-designer/styles.css";
 import { TemplateEditor, TemplateProvider } from "@trycourier/react-designer";
 import { BrandEditor, BrandProvider } from "@trycourier/react-designer";
@@ -10,6 +10,7 @@ const Designer: React.FC = () => {
   const tenantId = process.env.REACT_APP_DEMO_TENANT_ID;
   const [activeTab, setActiveTab] = useState(0);
   const [templateId] = useState('template-id');
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light');
 
   if (!tenantId || !jwtToken) {
     return (
@@ -42,11 +43,23 @@ const Designer: React.FC = () => {
         </Alert>
       </Box>
       
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
-        <Tabs value={activeTab} onChange={(e, v) => setActiveTab(v)}>
-          <Tab label="Template Editor" />
-          <Tab label="Brand Editor" />
-        </Tabs>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', flex: 1 }}>
+          <Tabs value={activeTab} onChange={(e, v) => setActiveTab(v)}>
+            <Tab label="Template Editor" />
+            <Tab label="Brand Editor" />
+          </Tabs>
+        </Box>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={colorScheme === 'dark'}
+              onChange={(e) => setColorScheme(e.target.checked ? 'dark' : 'light')}
+            />
+          }
+          label="Dark Mode"
+          sx={{ ml: 2 }}
+        />
       </Box>
       
       <Box sx={{ height: '70vh' }}>
@@ -62,23 +75,7 @@ const Designer: React.FC = () => {
                   primaryForeground: '#ffffff',
                   radius: '8px',
                 }}
-                variables={{
-                  user: {
-                    firstName: "User",
-                    lastName: "Name",
-                    email: `${userId}@courier.com`,
-                    phoneNumber: "+1234567890"
-                  },
-                  company: {
-                    name: "Example Company",
-                    address: {
-                      street: "123 Main Street",
-                      city: "San Francisco",
-                      state: "CA",
-                      zipCode: "94105"
-                    }
-                  }
-                }}
+                colorScheme={colorScheme}
               />
             </TemplateProvider>
           </Box>
@@ -87,7 +84,7 @@ const Designer: React.FC = () => {
         {activeTab === 1 && (
           <Box sx={{ height: '100%', width: '100%' }}>
             <BrandProvider tenantId={tenantId} token={jwtToken}>
-              <BrandEditor />
+              <BrandEditor colorScheme={colorScheme} />
             </BrandProvider>
           </Box>
         )}
