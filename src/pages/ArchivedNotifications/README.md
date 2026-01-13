@@ -1,6 +1,6 @@
-# Archived Notifications with Courier v8
+# Archived Notifications with Courier v9
 
-This page demonstrates how to properly fetch and display archived notifications using Courier React v8.2.0.
+This page demonstrates how to properly fetch and display archived notifications using Courier React v9.0.2.
 
 ## Key Differences from v7
 
@@ -21,8 +21,8 @@ const { inbox } = courier;
 // Get archived messages directly from the archive dataset
 const archivedMessages = inbox?.archive?.messages ?? [];
 
-// Fetch archived messages using feedType (not 'view')
-await inbox.fetchNextPageOfMessages({ feedType: 'archive' });
+// Fetch archived messages using datasetId (v9 API - was feedType in v8)
+await inbox.fetchNextPageOfMessages({ datasetId: 'archive' });
 ```
 
 ## API Reference
@@ -37,7 +37,7 @@ await inbox.fetchNextPageOfMessages({ feedType: 'archive' });
   },
   inbox: {
     load: () => Promise<void>,
-    fetchNextPageOfMessages: (props: { feedType: 'inbox' | 'archive' }) => Promise<InboxDataSet | null>,
+    fetchNextPageOfMessages: (props: { datasetId: 'inbox' | 'archive' }) => Promise<InboxDataSet | null>,
     inbox?: InboxDataSet,     // Regular inbox messages
     archive?: InboxDataSet,   // Archived messages
     // ... other methods
@@ -48,12 +48,12 @@ await inbox.fetchNextPageOfMessages({ feedType: 'archive' });
 
 ### Key Methods:
 - **`inbox.archive?.messages`** - Array of archived messages
-- **`inbox.fetchNextPageOfMessages({ feedType: 'archive' })`** - Fetch archived messages
-- **`inbox.fetchNextPageOfMessages({ feedType: 'inbox' })`** - Fetch regular inbox messages
+- **`inbox.fetchNextPageOfMessages({ datasetId: 'archive' })`** - Fetch archived messages
+- **`inbox.fetchNextPageOfMessages({ datasetId: 'inbox' })`** - Fetch regular inbox messages
 
 ## Common Pitfalls
 
-1. ❌ Using `{ view: 'archived' }` - should be `{ feedType: 'archive' }`
+1. ❌ Using `{ view: 'archived' }` or `{ feedType: 'archive' }` - should be `{ datasetId: 'archive' }` in v9
 2. ❌ Filtering `messages` by `archived` property - use `inbox.archive?.messages` instead
 3. ❌ Type casting `inbox as CustomInboxHooks` - proper types are already available
 
@@ -70,7 +70,7 @@ const MyComponent = () => {
   
   // Fetch more archived messages
   const handleFetch = async () => {
-    await inbox.fetchNextPageOfMessages({ feedType: 'archive' });
+    await inbox.fetchNextPageOfMessages({ datasetId: 'archive' });
   };
   
   return (

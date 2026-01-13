@@ -82,8 +82,8 @@ const ArchivedNotifications: React.FC = () => {
         throw new Error('Inbox not initialized. Please ensure authentication is complete.');
       }
 
-      // Fetch archived messages using the feedType
-      const result = await inbox.fetchNextPageOfMessages({ feedType: 'archive' });
+      // Fetch archived messages using the datasetId (v9 API change)
+      const result = await inbox.fetchNextPageOfMessages({ datasetId: 'archive' });
       
       if (result) {
         setLastFetchResult(result);
