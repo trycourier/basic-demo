@@ -18,8 +18,8 @@ await fetchNextPageOfMessages({ view: 'archived' });
 const courier = useCourier();
 const { inbox } = courier;
 
-// Get archived messages directly from the archive dataset
-const archivedMessages = inbox?.archive?.messages ?? [];
+// Get archived messages directly from the archive dataset (v9 API - accessed via feeds)
+const archivedMessages = inbox?.feeds?.['archive']?.messages ?? [];
 
 // Fetch archived messages using datasetId (v9 API - was feedType in v8)
 await inbox.fetchNextPageOfMessages({ datasetId: 'archive' });
@@ -38,8 +38,7 @@ await inbox.fetchNextPageOfMessages({ datasetId: 'archive' });
   inbox: {
     load: () => Promise<void>,
     fetchNextPageOfMessages: (props: { datasetId: 'inbox' | 'archive' }) => Promise<InboxDataSet | null>,
-    inbox?: InboxDataSet,     // Regular inbox messages
-    archive?: InboxDataSet,   // Archived messages
+    feeds: Record<string, InboxDataSet>,  // All datasets including 'archive' and 'inbox'
     // ... other methods
   },
   toast: { ... }
@@ -47,14 +46,14 @@ await inbox.fetchNextPageOfMessages({ datasetId: 'archive' });
 ```
 
 ### Key Methods:
-- **`inbox.archive?.messages`** - Array of archived messages
+- **`inbox.feeds?.['archive']?.messages`** - Array of archived messages (v9 API)
 - **`inbox.fetchNextPageOfMessages({ datasetId: 'archive' })`** - Fetch archived messages
 - **`inbox.fetchNextPageOfMessages({ datasetId: 'inbox' })`** - Fetch regular inbox messages
 
 ## Common Pitfalls
 
 1. ❌ Using `{ view: 'archived' }` or `{ feedType: 'archive' }` - should be `{ datasetId: 'archive' }` in v9
-2. ❌ Filtering `messages` by `archived` property - use `inbox.archive?.messages` instead
+2. ❌ Filtering `messages` by `archived` property - use `inbox.feeds?.['archive']?.messages` instead (v9 API)
 3. ❌ Type casting `inbox as CustomInboxHooks` - proper types are already available
 
 ## Example Usage
@@ -65,8 +64,8 @@ import { useCourier } from '@trycourier/courier-react';
 const MyComponent = () => {
   const { inbox } = useCourier();
   
-  // Get archived messages
-  const archivedMessages = inbox?.archive?.messages ?? [];
+  // Get archived messages (v9 API - accessed via feeds)
+  const archivedMessages = inbox?.feeds?.['archive']?.messages ?? [];
   
   // Fetch more archived messages
   const handleFetch = async () => {

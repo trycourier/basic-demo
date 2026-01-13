@@ -113,8 +113,8 @@ const ArchivedNotifications: React.FC = () => {
     }
   }, [isAuthenticated, jwtToken, userId, inbox, hasFetched, handleFetchArchived]);
 
-  // Get archived messages from the archive inbox dataset
-  const archivedMessages = inbox?.archive?.messages ?? [];
+  // Get archived messages from the archive inbox dataset (v9 API - accessed via feeds)
+  const archivedMessages = inbox?.feeds?.['archive']?.messages ?? [];
   // Check if there are more messages to load
   // If the last fetch returned results with messages, there might be more pages
   // Note: The actual pagination check depends on the Courier API implementation
